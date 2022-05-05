@@ -27,7 +27,7 @@ class Home extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       title: Text(
-        "Welcome Back, Yasser",
+        "Welcome Back, Guruvignesh",
         style: TextStyle(fontSize: ResponsiveFlutter.of(context).fontSize(2.4)),
       ),
       actions: [
@@ -65,11 +65,13 @@ class Home extends StatelessWidget {
         MediaQuery.of(context).padding.top;
     final realWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: buildAppBar(context),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        // textBaseline: TextBaseline.alphabetic,
         children: [
           Container(
             height: realHeight * 0.46,
@@ -91,32 +93,47 @@ class Home extends StatelessWidget {
               height: realHeight * 0.45,
               padding: EdgeInsets.only(bottom: realHeight * 0.125),
               width: double.infinity,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: transactions.length <= 2
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.spaceEvenly,
-                  children: transactions
-                      .getRange(
-                          0, transactions.length < 3 ? transactions.length : 3)
-                      .map((tx) {
-                    return TransactionCard(
-                      amount: tx.amount,
-                      date: tx.date,
-                      id: tx.id,
-                      title: tx.title,
-                      category: tx.category,
-                    );
-                  }).toList(),
-                ),
-              ),
+              child: Scroll(transactions: transactions),
             ),
           ),
           SizedBox(
             height: realHeight * 0.009,
           ),
         ],
+      ),
+    );
+  }
+}
+
+//  Scroll(transactions: transactions)
+class Scroll extends StatelessWidget {
+  const Scroll({
+    Key key,
+    @required this.transactions,
+  }) : super(key: key);
+
+  final List<Transaction> transactions;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        textBaseline: TextBaseline.alphabetic,
+        mainAxisAlignment: transactions.length <= 2
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.spaceEvenly,
+        children: transactions
+            .getRange(0, transactions.length < 3 ? transactions.length : 3)
+            .map((tx) {
+          return TransactionCard(
+            amount: tx.amount,
+            date: tx.date,
+            id: tx.id,
+            title: tx.title,
+            category: tx.category,
+          );
+        }).toList(),
       ),
     );
   }
